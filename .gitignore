@@ -1,6 +1,11 @@
+# Ficheiros Mac & Win #
 *.class
+*.exe
+.localized
+.DS_Store
 
 # Package Files #
 *.jar
 *.war
 *.ear
+/BasesDados/nbproject/private/
