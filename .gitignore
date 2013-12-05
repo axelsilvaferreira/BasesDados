@@ -9,3 +9,4 @@
 *.war
 *.ear
 /BasesDados/nbproject/private/
+/BasesDados/build/
