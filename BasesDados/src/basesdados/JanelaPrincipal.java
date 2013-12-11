@@ -41,6 +41,7 @@ public class JanelaPrincipal extends javax.swing.JFrame
         jButton6 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JSeparator();
+        jLabel1 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         menu_login = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
@@ -67,6 +68,8 @@ public class JanelaPrincipal extends javax.swing.JFrame
 
         jButton5.setText("login");
 
+        jLabel1.setText("Codigo Errado");
+
         javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
         jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
         jInternalFrame1Layout.setHorizontalGroup(
@@ -79,16 +82,18 @@ public class JanelaPrincipal extends javax.swing.JFrame
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton5))
                     .addGroup(jInternalFrame1Layout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(12, 12, 12))
+                    .addGroup(jInternalFrame1Layout.createSequentialGroup()
                         .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel8)
                             .addComponent(jLabel7))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jInternalFrame1Layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(12, 12, 12)))
+                        .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jTextField6, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jTextField5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(8, Short.MAX_VALUE))
@@ -108,7 +113,9 @@ public class JanelaPrincipal extends javax.swing.JFrame
                 .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton5)
                     .addComponent(jButton6))
@@ -120,16 +127,16 @@ public class JanelaPrincipal extends javax.swing.JFrame
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(147, 147, 147)
+                .addGap(157, 157, 157)
                 .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(234, Short.MAX_VALUE))
+                .addContainerGap(224, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(105, Short.MAX_VALUE)
+                .addContainerGap(88, Short.MAX_VALUE)
                 .addComponent(jInternalFrame1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(84, 84, 84))
+                .addGap(85, 85, 85))
         );
 
         menu_login.setText("File");
@@ -242,6 +249,7 @@ public class JanelaPrincipal extends javax.swing.JFrame
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JInternalFrame jInternalFrame1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
