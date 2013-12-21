@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Observable;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,48 +18,38 @@ import javax.swing.JOptionPane;
  */
 public class LocalDAO extends Observable {
 
-    public int size() {
-        try {
+    public int size() throws SQLException {
+       
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("Select count(*) from Locais");
             if (rs.next()) {
                 return rs.getInt(1);
             }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-        }
+
         return 0;
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty() throws SQLException {
         return this.size() == 0;
     }
 
-    public Local get(Object key) {
+    public Local get(Object key) throws SQLException {
         Local local = null;
-        try {
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("Select * from Locais where nl='" + (String) key + "'");
             if (rs.next()) {
                 local = new Local(rs.getString(1), rs.getString(2), rs.getFloat(3), rs.getInt(4), rs.getString(5));
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-        }
         return local;
     }
 
-    public Local[] getAll() {
+    public Local[] getAll() throws SQLException {
         Local[] lista = new Local[this.size()];
-        try {
             Statement stm = conn.createStatement();
             ResultSet rs = stm.executeQuery("Select * from Locais order by nl");
             for (int i = 0; rs.next(); i++) {
                 lista[i] = new Local(rs.getString(1), rs.getString(2), rs.getFloat(3), rs.getInt(4), rs.getString(5));
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-        }
         return lista;
     }
 

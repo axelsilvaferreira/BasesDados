@@ -9,7 +9,8 @@ import java.util.Observable;
 import java.util.Observer;
 import Data_layer.*;
 import Business_layer.*;
-import java.util.GregorianCalendar;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -55,63 +56,78 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
     }
 
     public void listEspecie() {
-
-        tabelaModelo DTM = new tabelaModelo();
-        DTM.addColumn("Nome");
-        for (Especie especie : this.especieDAO.getAll()) {
-            DTM.addRow(new Object[]{especie.getNome()});
+        try {
+            tabelaModelo DTM = new tabelaModelo();
+            DTM.addColumn("Nome");
+            for (Especie especie : this.especieDAO.getAll()) {
+                DTM.addRow(new Object[]{especie.getNome()});
+            }
+            jTableEspecie.setModel(DTM);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-        jTableEspecie.setModel(DTM);
 
     }
 
     public void listLocal() {
-
-        tabelaModelo DTM = new tabelaModelo();
-        DTM.addColumn("Nome");
-        DTM.addColumn("Codigo Postal");
-        for (Local local : this.localDAO.getAll()) {
-            DTM.addRow(new Object[]{local.getNome(), local.getCodPostal()});
+        try {
+            tabelaModelo DTM = new tabelaModelo();
+            DTM.addColumn("Nome");
+            DTM.addColumn("Codigo Postal");
+            for (Local local : this.localDAO.getAll()) {
+                DTM.addRow(new Object[]{local.getNome(), local.getCodPostal()});
+            }
+            jTableLocal.setModel(DTM);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-        jTableLocal.setModel(DTM);
 
     }
 
     public void listReserva() {
-
-        tabelaModelo DTM = new tabelaModelo();
-        DTM.addColumn("Numero");
-        DTM.addColumn("Data");
-        DTM.addColumn("Local");
-        DTM.addColumn("Numero Cacador");
-        for (Reserva reserva : this.reservaDAO.getAll()) {
-           DTM.addRow(new Object[]{reserva.getNumero(), reserva.getData(), reserva.getLocal(), reserva.getNumCacador()});
+        try {
+            tabelaModelo DTM = new tabelaModelo();
+            DTM.addColumn("Numero");
+            DTM.addColumn("Data");
+            DTM.addColumn("Local");
+            DTM.addColumn("Numero Cacador");
+            for (Reserva reserva : this.reservaDAO.getAll()) {
+                DTM.addRow(new Object[]{reserva.getNumero(), reserva.getData(), reserva.getLocal(), reserva.getNumCacador()});
+            }
+            jTableReserva.setModel(DTM);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-        jTableReserva.setModel(DTM);
 
     }
 
     public void listCacador() {
-
-        tabelaModelo DTM = new tabelaModelo();
-        DTM.addColumn("Numero");
-        DTM.addColumn("Nome");
-        for (Cacador cacador : this.cacadorDAO.getAll()) {
-            DTM.addRow(new Object[]{cacador.getNumero(), cacador.getNome()});
+        try {
+            tabelaModelo DTM = new tabelaModelo();
+            DTM.addColumn("Numero");
+            DTM.addColumn("Nome");
+            for (Cacador cacador : this.cacadorDAO.getAll()) {
+                DTM.addRow(new Object[]{cacador.getNumero(), cacador.getNome()});
+            }
+            jTableCacador.setModel(DTM);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-        jTableCacador.setModel(DTM);
 
     }
 
     public void listCodPostal() {
-
-        tabelaModelo DTM = new tabelaModelo();
-        DTM.addColumn("Codigo Postal");
-        DTM.addColumn("Freguesia");
-        for (CodPostal codPostal : this.codPostalDAO.getAll()) {
-            DTM.addRow(new Object[]{codPostal.getCodigo(), codPostal.getFreguesia()});
+        try {
+            tabelaModelo DTM = new tabelaModelo();
+            DTM.addColumn("Codigo Postal");
+            DTM.addColumn("Freguesia");
+            for (CodPostal codPostal : this.codPostalDAO.getAll()) {
+                DTM.addRow(new Object[]{codPostal.getCodigo(), codPostal.getFreguesia()});
+            }
+            jTableCodPostal.setModel(DTM);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-        jTableCodPostal.setModel(DTM);
     }
 
     /**

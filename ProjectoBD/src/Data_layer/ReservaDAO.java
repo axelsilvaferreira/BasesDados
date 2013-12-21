@@ -20,52 +20,40 @@ import javax.swing.JOptionPane;
  */
 public class ReservaDAO extends Observable {
 
-    public int size() {
-        try {
-            Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery("Select count(*) from Reservas");
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+    public int size() throws SQLException {
+        Statement stm = conn.createStatement();
+        ResultSet rs = stm.executeQuery("Select count(*) from Reservas");
+        if (rs.next()) {
+            return rs.getInt(1);
         }
         return 0;
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty() throws SQLException {
         return this.size() == 0;
     }
 
-    public Reserva get(Object key) {
+    public Reserva get(Object key) throws SQLException {
         Reserva reserva = null;
-        try {
-            Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery("Select r.*, EXTRACT(YEAR FROM dn), "
-                    + "EXTRACT(MONTH FROM dn), EXTRACT(DAY FROM dn) "
-                    + "from Reservas r where nr='" + (long) key + "' order by nr");
-            if (rs.next()) {
-                reserva = new Reserva(rs.getLong(1),
-                        new myDate(rs.getInt(5), rs.getInt(6), rs.getInt(7)), rs.getLong(3), rs.getString(4));
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        Statement stm = conn.createStatement();
+        ResultSet rs = stm.executeQuery("Select r.*, EXTRACT(YEAR FROM dn), "
+                + "EXTRACT(MONTH FROM dn), EXTRACT(DAY FROM dn) "
+                + "from Reservas r where nr='" + (long) key + "' order by nr");
+        if (rs.next()) {
+            reserva = new Reserva(rs.getLong(1),
+                    new myDate(rs.getInt(5), rs.getInt(6), rs.getInt(7)), rs.getLong(3), rs.getString(4));
         }
         return reserva;
     }
 
-    public Reserva[] getAll() {
+    public Reserva[] getAll() throws SQLException {
         Reserva[] lista = new Reserva[this.size()];
-        try {
-            Statement stm = conn.createStatement();
-            ResultSet rs = stm.executeQuery("Select r.*, EXTRACT(YEAR FROM data), "
-                    + "EXTRACT(MONTH FROM data), EXTRACT(DAY FROM data) from Reservas r order by nr");
-            for (int i = 0; rs.next(); i++) {
-                lista[i] = new Reserva(rs.getLong(1),
-                        new myDate(rs.getInt(5), rs.getInt(6), rs.getInt(7)), rs.getLong(3), rs.getString(4));
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        Statement stm = conn.createStatement();
+        ResultSet rs = stm.executeQuery("Select r.*, EXTRACT(YEAR FROM data), "
+                + "EXTRACT(MONTH FROM data), EXTRACT(DAY FROM data) from Reservas r order by nr");
+        for (int i = 0; rs.next(); i++) {
+            lista[i] = new Reserva(rs.getLong(1),
+                    new myDate(rs.getInt(5), rs.getInt(6), rs.getInt(7)), rs.getLong(3), rs.getString(4));
         }
         return lista;
     }
