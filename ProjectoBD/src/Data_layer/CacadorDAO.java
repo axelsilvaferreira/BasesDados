@@ -6,106 +6,137 @@
 package Data_layer;
 
 import Business_layer.Cacador;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import Business_layer.myDate;
+import static Data_layer.ConnectBD.conn;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.Observable;
 import javax.swing.JOptionPane;
 
 /**
  *
  * @author andreramos
  */
-public class CacadorDAO implements Map<Long, Cacador> {
+public class CacadorDAO extends Observable {
 
-    public Connection conn;
-
-    public CacadorDAO() throws ClassNotFoundException, SQLException {
-        try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-            Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl", "projectobd", "projectobd");
-        } catch (ClassNotFoundException | SQLException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    @Override
     public int size() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isEmpty() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean containsKey(Object key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean containsValue(Object value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public Cacador get(Object key) {
         try {
-            Cacador cacador = null;
             Statement stm = conn.createStatement();
-            //String sql = "SELECT * FROM cod_postal WHERE cp='" + (String) key + "'";
-            String sql = "Select * from Cacadores where NC='"+ (String) key + "'";
-            ResultSet rs = stm.executeQuery(sql);
+            ResultSet rs = stm.executeQuery("Select count(*) from Cacadores");
             if (rs.next()) {
-               // cacador = new Cacador(Long.parseLong(rs.getString(1)), rs.getString(2), rs.getString(3), rs.getString(4));
+                return rs.getInt(1);
             }
-            return cacador;
-        } catch (SQLException | NumberFormatException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
-            return null;
         }
-        
+        return 0;
     }
 
-    @Override
-    public Cacador remove(Object key) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean isEmpty() {
+        return this.size() == 0;
     }
 
-    @Override
-    public void putAll(Map<? extends Long, ? extends Cacador> m) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean containsKey(Object key) {
+        try {
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery("Select * from Cacador where nc='" + (long) key + "'");
+            return rs.next();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
     }
 
-    @Override
-    public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean containsValue(Object value) {
+        Cacador cacador = (Cacador) value;
+        return this.containsKey(cacador.getNumero());
     }
 
-    @Override
-    public Set<Long> keySet() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Cacador get(Object key) {
+        Cacador cacador = null;
+        try {
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery("Select c.*, EXTRACT(YEAR FROM dn), "
+                    + "EXTRACT(MONTH FROM dn), EXTRACT(DAY FROM dn) "
+                    + "from cacadores c where nc='" + (long) key + "' order by n");
+
+            if (rs.next()) {
+                cacador = new Cacador(rs.getLong(1), rs.getString(2), rs.getString(3),
+                        new myDate(rs.getInt(9), rs.getInt(10), rs.getInt(11)),
+                        rs.getString(5), rs.getInt(6), rs.getString(7), rs.getString(8));
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        return cacador;
     }
 
-    @Override
-    public Collection<Cacador> values() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Cacador[] getAll() {
+        Cacador[] lista = new Cacador[this.size()];
+        try {
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery("Select c.*, EXTRACT(YEAR FROM dn), "
+                    + "EXTRACT(MONTH FROM dn), EXTRACT(DAY FROM dn) from cacadores c");
+
+            for (int i = 0; rs.next(); i++) {
+                lista[i] = new Cacador(rs.getLong(1), rs.getString(2), rs.getString(3),
+                        new myDate(rs.getInt(9), rs.getInt(10), rs.getInt(11)),
+                        rs.getString(5), rs.getInt(6), rs.getString(7), rs.getString(8));
+
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        return lista;
     }
 
-    @Override
-    public Set<Entry<Long, Cacador>> entrySet() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public int put(Cacador value) {
+        int res = -1;
+        try {
+            //Se existir temos de fazer update, mas isso é na base de dados
+            Statement stm = conn.createStatement();
+            myDate data = value.getDataNasc();
+            String sql = "INSERT INTO Cacadores VALUES('" + value.getNumero()
+                    + "','" + value.getNome() + "','" + value.getBI()
+                    + "',to_date('" + data.ano + "-" + data.mes + "-" + data.dia + "','yyyy-mm-dd')"
+                    + ",'" + value.getCodPostal() + "','" + value.getTelefone() + "','" + value.getMail()
+                    + "','" + value.getPass() + "')";
+
+            res = stm.executeUpdate(sql);
+            this.setChanged();
+            this.notifyObservers();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        return res;
     }
 
-    @Override
-    public Cacador put(Long key, Cacador value) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int remove(Object key) {
+        int res = -1;
+        try {
+            Statement stm = conn.createStatement();
+            res = stm.executeUpdate("Delete from Cacadores where nc='" + (String) key + "'");
+            this.setChanged();
+            this.notifyObservers();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        return res;
+    }
+
+    public int clear() {
+        int res = -1;
+        try {
+            Statement stm = conn.createStatement();
+            res = stm.executeUpdate("Delete from Cacadores");
+            this.setChanged();
+            this.notifyObservers();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        return res;
     }
 
 }

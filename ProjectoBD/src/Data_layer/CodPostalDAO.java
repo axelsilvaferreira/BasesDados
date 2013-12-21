@@ -65,6 +65,20 @@ public class CodPostalDAO extends Observable {
         }
         return codPostal;
     }
+    
+        public CodPostal[] getAll() {
+        CodPostal[] lista = new CodPostal[this.size()];
+        try {
+            Statement stm = conn.createStatement();
+            ResultSet rs = stm.executeQuery("Select * from Cod_Postal order by cp");
+            for (int i = 0; rs.next(); i++) {
+                lista[i] = new CodPostal(rs.getString(1), rs.getString(2), rs.getString(3));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+        return lista;
+    }
 
     public int put(CodPostal value) {
         int res = -1;

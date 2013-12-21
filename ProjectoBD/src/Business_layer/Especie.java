@@ -14,13 +14,11 @@ public class Especie {
     private String nome;
     private int numeroMax;
     private String desc;
-    private String foto;
 
-    public Especie(String nome, int numeroMax, String desc, String foto) {
+    public Especie(String nome, int numeroMax, String desc) {
         this.nome = nome;
         this.numeroMax = numeroMax;
         this.desc = desc;
-        this.foto = foto;
     }
 
     public String getNome() {
@@ -33,10 +31,6 @@ public class Especie {
 
     public String getDesc() {
         return this.desc;
-    }
-
-    public String getFoto() {
-        return this.foto;
     }
 
 }

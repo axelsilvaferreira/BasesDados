@@ -14,14 +14,14 @@ import java.util.GregorianCalendar;
 public class Reserva {
 
     private long numero;
-    private GregorianCalendar data;
-    private long cacador;
+    private myDate data;
+    private long numCacador;
     private String local;
 
-    public Reserva(long numero, GregorianCalendar data, long cacador, String local) {
+    public Reserva(long numero, myDate data, long numCacador, String local) {
         this.numero = numero;
         this.data = data;
-        this.cacador = cacador;
+        this.numCacador = numCacador;
         this.local = local;
     }
 
@@ -29,12 +29,12 @@ public class Reserva {
         return this.numero;
     }
 
-    public GregorianCalendar getData() {
+    public myDate getData() {
         return this.data;
     }
 
-    public long getCacador() {
-        return this.cacador;
+    public long getNumCacador() {
+        return this.numCacador;
     }
 
     public String getLocal() {

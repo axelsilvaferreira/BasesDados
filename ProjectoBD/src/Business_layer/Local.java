@@ -16,15 +16,13 @@ public class Local {
     private float preco;
     private int limite;
     private String desc;
-    private String foto;
 
-    public Local(String nome, String codPostal, float preco, int limite, String desc, String foto) {
+    public Local(String nome, String codPostal, float preco, int limite, String desc) {
         this.nome = nome;
         this.codPostal = codPostal;
         this.preco = preco;
         this.limite = limite;
         this.desc = desc;
-        this.foto = foto;
     }
 
     public String getNome() {
@@ -45,10 +43,6 @@ public class Local {
 
     public String getDesc() {
         return this.desc;
-    }
-
-    public String getFoto() {
-        return this.foto;
     }
 
 }

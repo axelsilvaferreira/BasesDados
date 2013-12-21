@@ -18,7 +18,7 @@ public class ConnectBD {
 
     public static Connection conn;
 
-    public void startBD() {
+    public static void startBD() {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             ConnectBD.conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:orcl", "projectobd", "projectobd");
@@ -28,7 +28,7 @@ public class ConnectBD {
         }
     }
 
-    public void closeBD() {
+    public static void closeBD() {
         try {
             ConnectBD.conn.close();
         } catch (SQLException e) {
