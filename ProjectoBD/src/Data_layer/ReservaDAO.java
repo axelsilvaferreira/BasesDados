@@ -12,13 +12,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Observable;
-import javax.swing.JOptionPane;
 
 /**
  *
  * @author andreramos
  */
 public class ReservaDAO extends Observable {
+    
+    public ReservaDAO(){}
 
     public int size() throws SQLException {
         Statement stm = conn.createStatement();
@@ -36,9 +37,9 @@ public class ReservaDAO extends Observable {
     public Reserva get(Object key) throws SQLException {
         Reserva reserva = null;
         Statement stm = conn.createStatement();
-        ResultSet rs = stm.executeQuery("Select r.*, EXTRACT(YEAR FROM dn), "
-                + "EXTRACT(MONTH FROM dn), EXTRACT(DAY FROM dn) "
-                + "from Reservas r where nr='" + (long) key + "' order by nr");
+        ResultSet rs = stm.executeQuery("Select Reservas.*, EXTRACT(YEAR FROM data), "
+                + "EXTRACT(MONTH FROM data), EXTRACT(DAY FROM data) from Reservas "
+                + "where nr=" + (long) key + "");
         if (rs.next()) {
             reserva = new Reserva(rs.getLong(1),
                     new myDate(rs.getInt(5), rs.getInt(6), rs.getInt(7)), rs.getLong(3), rs.getString(4));
@@ -56,6 +57,14 @@ public class ReservaDAO extends Observable {
                     new myDate(rs.getInt(5), rs.getInt(6), rs.getInt(7)), rs.getLong(3), rs.getString(4));
         }
         return lista;
+    }
+
+    public int remove(Object key) throws SQLException {
+        Statement stm = conn.createStatement();
+        int res = stm.executeUpdate("Delete from Reservas where nr='" + (long) key + "'");
+        this.setChanged();
+        this.notifyObservers();
+        return res;
     }
 
 }

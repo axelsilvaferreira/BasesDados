@@ -17,6 +17,8 @@ import java.util.Observable;
  * @author andreramos
  */
 public class CodPostalDAO extends Observable {
+    
+    public CodPostalDAO(){}
 
     public int size() throws SQLException {
 
@@ -64,14 +66,23 @@ public class CodPostalDAO extends Observable {
     }
 
     public int put(CodPostal value) throws SQLException {
-        //Se existir temos de fazer update, mas isso é na base de dados
         Statement stm = conn.createStatement();
         String sql = "INSERT INTO cod_postal VALUES('" + value.getCodigo()
                 + "','" + value.getConcelho() + "','" + value.getFreguesia() + "')";
         int res = stm.executeUpdate(sql);
         this.setChanged();
         this.notifyObservers();
+        return res;
+    }
 
+    public int update(CodPostal value, String key) throws SQLException {
+        Statement stm = conn.createStatement();
+        String sql = "Update cod_postal set cp='" + value.getCodigo()
+                + "', c='" + value.getConcelho() + "', f='" + value.getFreguesia()
+                + "' where cp ='" + key + "'";
+        int res = stm.executeUpdate(sql);
+        this.setChanged();
+        this.notifyObservers();
         return res;
     }
 
@@ -86,8 +97,6 @@ public class CodPostalDAO extends Observable {
     public int clear() throws SQLException {
         Statement stm = conn.createStatement();
         int res = stm.executeUpdate("Delete from Cod_Postal");
-        this.setChanged();
-        this.notifyObservers();
         return res;
     }
 

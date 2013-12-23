@@ -17,11 +17,13 @@ import java.util.Observable;
  * @author andreramos
  */
 public class EspecieDAO extends Observable {
+    
+    public EspecieDAO(){}
 
     public int size() throws SQLException {
 
         Statement stm = conn.createStatement();
-        ResultSet rs = stm.executeQuery("Select count(*) from Especies");
+        ResultSet rs = stm.executeQuery("Select count(ne) from Especies");
         if (rs.next()) {
             return rs.getInt(1);
         }
@@ -35,23 +37,29 @@ public class EspecieDAO extends Observable {
     public Especie get(Object key) throws SQLException {
         Especie especie = null;
         Statement stm = conn.createStatement();
-        ResultSet rs = stm.executeQuery("Select * from Especies where ne='" + (String) key + "'");
+        ResultSet rs = stm.executeQuery("Select ne,nm,de from Especies where ne='" + (String) key + "'");
         if (rs.next()) {
             especie = new Especie(rs.getString(1), rs.getInt(2), rs.getString(3));
         }
-
         return especie;
     }
 
     public Especie[] getAll() throws SQLException {
         Especie[] lista = new Especie[this.size()];
-
         Statement stm = conn.createStatement();
-        ResultSet rs = stm.executeQuery("Select * from Especies order by ne");
+        ResultSet rs = stm.executeQuery("Select ne,nm,de from Especies order by ne");
         for (int i = 0; rs.next(); i++) {
             lista[i] = new Especie(rs.getString(1), rs.getInt(2), rs.getString(3));
         }
         return lista;
+    }
+
+    public int remove(Object key) throws SQLException {
+        Statement stm = conn.createStatement();
+        int res = stm.executeUpdate("Delete from Especies where ne='" + (String) key + "'");
+        this.setChanged();
+        this.notifyObservers();
+        return res;
     }
 
 }

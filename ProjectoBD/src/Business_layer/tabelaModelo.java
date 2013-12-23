@@ -18,5 +18,9 @@ public class tabelaModelo extends DefaultTableModel {
     public boolean isCellEditable(int row, int column) {
        return false;
     }
+
+    public Object getSelectionModel() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

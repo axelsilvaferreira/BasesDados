@@ -25,7 +25,7 @@ public class Especie {
         return this.nome;
     }
 
-    public int getNUmeroMax() {
+    public int getNumeroMax() {
         return this.numeroMax;
     }
 

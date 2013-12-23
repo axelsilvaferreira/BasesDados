@@ -18,6 +18,8 @@ import java.util.Observable;
  * @author andreramos
  */
 public class CacadorDAO extends Observable {
+    
+    public CacadorDAO(){}
 
     public int size() throws SQLException {
 
@@ -53,7 +55,7 @@ public class CacadorDAO extends Observable {
         Statement stm = conn.createStatement();
         ResultSet rs = stm.executeQuery("Select c.*, EXTRACT(YEAR FROM dn), "
                 + "EXTRACT(MONTH FROM dn), EXTRACT(DAY FROM dn) "
-                + "from cacadores c where nc='" + (long) key + "' order by n");
+                + "from cacadores c where nc=" + (long)key + " order by n");
 
         if (rs.next()) {
             cacador = new Cacador(rs.getLong(1), rs.getString(2), rs.getString(3),
@@ -100,10 +102,9 @@ public class CacadorDAO extends Observable {
 
     public int remove(Object key) throws SQLException {
         Statement stm = conn.createStatement();
-        int res = stm.executeUpdate("Delete from Cacadores where nc='" + (String) key + "'");
+        int res = stm.executeUpdate("Delete from Cacadores where nc='" + (long) key + "'");
         this.setChanged();
         this.notifyObservers();
-
         return res;
     }
 
