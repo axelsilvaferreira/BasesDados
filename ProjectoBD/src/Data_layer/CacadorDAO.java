@@ -6,20 +6,22 @@
 package Data_layer;
 
 import Business_layer.Cacador;
-import Business_layer.myDate;
+import Business_layer.MyDate;
 import static Data_layer.ConnectBD.conn;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Observable;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author andreramos
  */
 public class CacadorDAO extends Observable {
-    
-    public CacadorDAO(){}
+
+    public CacadorDAO() {
+    }
 
     public int size() throws SQLException {
 
@@ -55,11 +57,11 @@ public class CacadorDAO extends Observable {
         Statement stm = conn.createStatement();
         ResultSet rs = stm.executeQuery("Select c.*, EXTRACT(YEAR FROM dn), "
                 + "EXTRACT(MONTH FROM dn), EXTRACT(DAY FROM dn) "
-                + "from cacadores c where nc=" + (long)key + " order by n");
+                + "from cacadores c where nc=" + (long) key + " order by n");
 
         if (rs.next()) {
             cacador = new Cacador(rs.getLong(1), rs.getString(2), rs.getString(3),
-                    new myDate(rs.getInt(9), rs.getInt(10), rs.getInt(11)),
+                    new MyDate(rs.getInt(9), rs.getInt(10), rs.getInt(11)),
                     rs.getString(5), rs.getInt(6), rs.getString(7), rs.getString(8));
         }
 
@@ -75,7 +77,7 @@ public class CacadorDAO extends Observable {
 
         for (int i = 0; rs.next(); i++) {
             lista[i] = new Cacador(rs.getLong(1), rs.getString(2), rs.getString(3),
-                    new myDate(rs.getInt(9), rs.getInt(10), rs.getInt(11)),
+                    new MyDate(rs.getInt(9), rs.getInt(10), rs.getInt(11)),
                     rs.getString(5), rs.getInt(6), rs.getString(7), rs.getString(8));
 
         }
@@ -84,19 +86,30 @@ public class CacadorDAO extends Observable {
     }
 
     public int put(Cacador value) throws SQLException {
-        //Se existir temos de fazer update, mas isso é na base de dados
         Statement stm = conn.createStatement();
-        myDate data = value.getDataNasc();
         String sql = "INSERT INTO Cacadores VALUES('" + value.getNumero()
                 + "','" + value.getNome() + "','" + value.getBI()
-                + "',to_date('" + data.ano + "-" + data.mes + "-" + data.dia + "','yyyy-mm-dd')"
+                + "',to_date('" + value.getDataNasc().toString() + "','yyyy-mm-dd')"
                 + ",'" + value.getCodPostal() + "','" + value.getTelefone() + "','" + value.getMail()
                 + "','" + value.getPass() + "')";
 
         int res = stm.executeUpdate(sql);
         this.setChanged();
         this.notifyObservers();
+        return res;
+    }
 
+    public int update(Cacador value, long key) throws SQLException {
+        Statement stm = conn.createStatement();
+        String sql = "Update Cacadores set nc='" + value.getNumero()
+                + "', n='" + value.getNome() + "', bi='" + value.getBI()
+                + "', dn=to_date('" + value.getDataNasc().toString() + "','yyyy-mm-dd')"
+                + ", cp='" + value.getCodPostal() + "', tlf='" + value.getTelefone() + "', mail='" + value.getMail()
+                + "', pass='" + value.getPass() + "' where nc='" + key + "'";
+
+        int res = stm.executeUpdate(sql);
+        this.setChanged();
+        this.notifyObservers();
         return res;
     }
 

@@ -16,7 +16,7 @@ public class Cacador {
     private long numero;
     private String nome;
     private String BI;
-    private myDate dataNasc;
+    private MyDate dataNasc;
     private String codPostal;
     private int telefone;
     private String mail;
@@ -26,14 +26,14 @@ public class Cacador {
         this.numero = 0;
         this.nome = new String();
         this.BI = new String();
-        this.dataNasc = new myDate();
+        this.dataNasc = new MyDate();
         this.codPostal = new String();
         this.telefone = 0;
         this.mail = new String();
         this.pass = new String();
     }
 
-    public Cacador(long numero, String nome, String BI, myDate dataNasc, String codPostal, int telefone, String mail, String pass) {
+    public Cacador(long numero, String nome, String BI, MyDate dataNasc, String codPostal, int telefone, String mail, String pass) {
         this.numero = numero;
         this.nome = nome;
         this.BI = BI;
@@ -56,7 +56,7 @@ public class Cacador {
         return this.BI;
     }
 
-    public myDate getDataNasc() {
+    public MyDate getDataNasc() {
         return this.dataNasc;
     }
 

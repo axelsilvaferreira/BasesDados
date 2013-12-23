@@ -10,6 +10,7 @@ import static Data_layer.ConnectBD.conn;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Observable;
 
 /**
@@ -17,8 +18,9 @@ import java.util.Observable;
  * @author andreramos
  */
 public class LocalDAO extends Observable {
-    
-    public LocalDAO(){}
+
+    public LocalDAO() {
+    }
 
     public int size() throws SQLException {
 
@@ -34,7 +36,7 @@ public class LocalDAO extends Observable {
     public boolean isEmpty() throws SQLException {
         return this.size() == 0;
     }
-    
+
     public int sizeLEspecies(Object key) throws SQLException {
         Statement stm = conn.createStatement();
         ResultSet rs = stm.executeQuery("Select count(*) from Loc_Especie where nl='" + (String) key + "'");
@@ -47,19 +49,19 @@ public class LocalDAO extends Observable {
     public Local get(Object key) throws SQLException {
         Local local = null;
         Statement stm = conn.createStatement();
-        ResultSet rs = stm.executeQuery("Select nl,cp,pl,l,dl from Locais where nl='" + (String) key + "'");        
+        ResultSet rs = stm.executeQuery("Select nl,cp,pl,l,dl from Locais where nl='" + (String) key + "'");
         if (rs.next()) {
             local = new Local(rs.getString(1), rs.getString(2), rs.getFloat(3), rs.getInt(4), rs.getString(5), getLEspecies(key));
         }
         return local;
     }
-    
-    public String[] getLEspecies(Object key) throws SQLException {
-        String[] lista = new String[sizeLEspecies(key)];
+
+    public ArrayList<String> getLEspecies(Object key) throws SQLException {
+        ArrayList<String> lista = new ArrayList<>();
         Statement stm = conn.createStatement();
         ResultSet rs = stm.executeQuery("Select * from Loc_Especie where nl='" + (String) key + "'");
-        for (int i = 0; rs.next(); i++) {
-            lista[i] = rs.getString(2);
+        while (rs.next()) {
+            lista.add(rs.getString(2));
         }
         return lista;
     }
@@ -72,6 +74,52 @@ public class LocalDAO extends Observable {
             lista[i] = new Local(rs.getString(1), rs.getString(2), rs.getFloat(3), rs.getInt(4), rs.getString(5), getLEspecies(rs.getString(1)));
         }
         return lista;
+    }
+
+    public int put(Local value) throws SQLException {
+        Statement stm = conn.createStatement();
+        String sql = "INSERT INTO Locais VALUES('" + value.getNome()
+                + "','" + value.getCodPostal() + "'," + value.getPreco()
+                + "," + value.getLimite() + ",'" + value.getDesc() + "','')";
+        int res = stm.executeUpdate(sql);
+        putLEspecies(value.getNome(),value.getEspecies());
+        
+        this.setChanged();
+        this.notifyObservers();
+        return res;
+    }
+
+    public int update(Local value, String key) throws SQLException {
+        Statement stm = conn.createStatement();
+        String sql = "Update Locais set nl='" + value.getNome()
+                + "', cp='" + value.getCodPostal() + "', pl=" + value.getPreco()
+                + ", l=" + value.getLimite()
+                + ", dl='" + value.getDesc()
+                + "' where nl ='" + key + "'";
+        int res = stm.executeUpdate(sql);
+        removeLEspecies(value.getNome());
+        putLEspecies(value.getNome(),value.getEspecies());
+        this.setChanged();
+        this.notifyObservers();
+        return res;
+    }
+
+    public void putLEspecies(String nl, ArrayList<String> lNe) throws SQLException {
+        Statement stm = conn.createStatement();
+        for (String ne : lNe) {
+            String sql = "INSERT INTO Loc_Especie VALUES('" + nl + "','" + ne + "')";
+            stm.executeUpdate(sql);
+        }
+        this.setChanged();
+        this.notifyObservers();
+    }
+
+    public int removeLEspecies(Object key) throws SQLException {
+        Statement stm = conn.createStatement();
+        int res = stm.executeUpdate("Delete from Loc_Especie where nl='" + (String) key + "'");
+        this.setChanged();
+        this.notifyObservers();
+        return res;
     }
 
     public int remove(Object key) throws SQLException {

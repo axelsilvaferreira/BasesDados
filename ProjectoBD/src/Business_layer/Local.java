@@ -5,6 +5,8 @@
  */
 package Business_layer;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author andreramos
@@ -16,9 +18,9 @@ public class Local {
     private float preco;
     private int limite;
     private String desc;
-    private String[] especies;
+    private ArrayList<String> especies;
 
-    public Local(String nome, String codPostal, float preco, int limite, String desc, String[] especies) {
+    public Local(String nome, String codPostal, float preco, int limite, String desc, ArrayList<String> especies) {
         this.nome = nome;
         this.codPostal = codPostal;
         this.preco = preco;
@@ -47,22 +49,22 @@ public class Local {
         return this.desc;
     }
 
-    public String[] getEspecies() {
+    public ArrayList<String> getEspecies() {
         return this.especies;
     }
 
-    public void setEspecies(String[] lista) {
+    public void setEspecies(ArrayList<String> lista) {
         this.especies = lista;
     }
 
     public String especiesToString() {
         String res = "";
-        int tam = especies.length;
+        int tam = especies.size();
         if (tam > 0) {
-            res += especies[0];
+            res += especies.get(0);
         }
-        for (int i = 1; i < especies.length; i++) {
-            res += System.getProperty("line.separator") + especies[i];
+        for (int i = 1; i < tam; i++) {
+            res += System.getProperty("line.separator") + especies.get(i);
         }
         return res;
     }

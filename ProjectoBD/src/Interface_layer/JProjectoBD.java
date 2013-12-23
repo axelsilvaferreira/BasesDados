@@ -10,8 +10,9 @@ import java.util.Observer;
 import Data_layer.*;
 import Business_layer.*;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.Scanner;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -54,6 +55,8 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         this.listReserva();
         this.listCacador();
         this.listCodPostal();
+
+        this.setResizable(false);
 
     }
 
@@ -138,6 +141,36 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         }
     }
 
+    private Especie makeEspecie() {
+        return new Especie(jTFENome.getText(), Integer.parseInt(jTFEMax.getText()), jTAEDesc.getText());
+    }
+
+    private Local makeLocal() {
+        ArrayList<String> lEspecies = new ArrayList<>();
+        Scanner scan = new Scanner(jTALEspecies.getText());
+        scan.useDelimiter(System.getProperty("line.separator"));
+        while (scan.hasNext()) {
+            lEspecies.add(scan.next());
+        }
+        return new Local(jTFLNome.getText(), jTFLCodPostal.getText(),
+                Float.parseFloat(jTFLPreco.getText()), Integer.parseInt(jTFLMax.getText()), jTALDesc.getText(), lEspecies);
+    }
+
+    private Reserva makeReserva() {
+        return new Reserva(0, new MyDate(jTFRData.getText()), Long.parseLong(jTFRCacador.getText()),
+                jTFRLocal.getText());
+    }
+
+    private Cacador makeCacador() {
+        return new Cacador(Long.parseLong(jTFCNum.getText()), jTFCNome.getText(),
+                jTFCBI.getText(), new MyDate(jTFCData.getText()), jTFCCodPostal.getText(),
+                Integer.parseInt(jTFCTelef.getText()), jTFCMail.getText(), jTFCPass.getText());
+    }
+
+    private CodPostal makeCodPostal() {
+        return new CodPostal(jTFCPCodPostal.getText(), jTFCPConcelho.getText(), jTFCPFreguesia.getText());
+    }
+
     private void rmEspecie() throws SQLException {
         String key = jTableEspecie.getValueAt(jTableEspecie.getSelectedRow(), 0).toString();
         this.especieDAO.remove(key);
@@ -199,6 +232,9 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         jScrollPane6 = new javax.swing.JScrollPane();
         jTAEDesc = new javax.swing.JTextArea();
         jLabel6 = new javax.swing.JLabel();
+        jBtnIEspecie = new javax.swing.JButton();
+        jBtnIMEspecie = new javax.swing.JButton();
+        jBtnRMEspecie = new javax.swing.JButton();
         jPLocal = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTableLocal = new javax.swing.JTable();
@@ -215,6 +251,10 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         jTALDesc = new javax.swing.JTextArea();
         jScrollPane9 = new javax.swing.JScrollPane();
         jTALEspecies = new javax.swing.JTextArea();
+        jLabel26 = new javax.swing.JLabel();
+        jBtnILocal = new javax.swing.JButton();
+        jBtnIMLocal = new javax.swing.JButton();
+        jBtnRMLocal = new javax.swing.JButton();
         jPReserva = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableReserva = new javax.swing.JTable();
@@ -222,10 +262,10 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         jTFRNum = new javax.swing.JTextField();
         jTFRLocal = new javax.swing.JTextField();
         jTFRCacador = new javax.swing.JTextField();
-        jTFRData = new javax.swing.JFormattedTextField();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
+        jTFRData = new javax.swing.JTextField();
         jPCacador = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableCacador = new javax.swing.JTable();
@@ -261,8 +301,11 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         jBtnGravar = new javax.swing.JButton();
         jBtnApagar = new javax.swing.JButton();
         jBtnCancelar = new javax.swing.JButton();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("CarninhaBravia");
 
         jTableEspecie.setAutoCreateRowSorter(true);
         jTableEspecie.setModel(new javax.swing.table.DefaultTableModel(
@@ -291,53 +334,78 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
             }
         });
 
-        jLabel5.setText("Numero maximo");
+        jLabel5.setText("Número máximo");
 
         jTAEDesc.setColumns(20);
         jTAEDesc.setRows(5);
         jScrollPane6.setViewportView(jTAEDesc);
 
-        jLabel6.setText("Descricao");
+        jLabel6.setText("Descrição");
+
+        jBtnIEspecie.setText("Imagem");
+        jBtnIEspecie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnIEspecieActionPerformed(evt);
+            }
+        });
+
+        jBtnIMEspecie.setText("Inserir Imagem");
+        jBtnIMEspecie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnIMEspecieActionPerformed(evt);
+            }
+        });
+
+        jBtnRMEspecie.setText("Remover Imagem");
 
         javax.swing.GroupLayout jPEspecieLayout = new javax.swing.GroupLayout(jPEspecie);
         jPEspecie.setLayout(jPEspecieLayout);
         jPEspecieLayout.setHorizontalGroup(
             jPEspecieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPEspecieLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
+                .addContainerGap()
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
+                .addGap(43, 43, 43)
                 .addGroup(jPEspecieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addGroup(jPEspecieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTFEMax, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-                        .addComponent(jTFENome, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(148, Short.MAX_VALUE))
+                    .addGroup(jPEspecieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel6)
+                        .addComponent(jTFEMax, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5)
+                        .addComponent(jLabel4)
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+                        .addComponent(jTFENome))
+                    .addGroup(jPEspecieLayout.createSequentialGroup()
+                        .addComponent(jBtnIEspecie)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBtnIMEspecie)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jBtnRMEspecie)))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
         jPEspecieLayout.setVerticalGroup(
             jPEspecieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPEspecieLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPEspecieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
                     .addGroup(jPEspecieLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPEspecieLayout.createSequentialGroup()
-                        .addGap(29, 29, 29)
                         .addComponent(jLabel4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTFENome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTFEMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel6)
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(17, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane6)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPEspecieLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jBtnIEspecie)
+                            .addComponent(jBtnIMEspecie)
+                            .addComponent(jBtnRMEspecie))))
+                .addContainerGap())
         );
 
         jTPPainel.addTab("Espécies", jPEspecie);
@@ -365,19 +433,37 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
 
         jLabel8.setText("Codigo Postal");
 
-        jLabel9.setText("Preço");
+        jLabel9.setText("Preço(€)");
 
-        jLabel10.setText("Limite de cacadores");
+        jLabel10.setText("Limite de caçadores");
 
-        jLabel11.setText("Descricao");
+        jLabel11.setText("Descrição");
 
         jTALDesc.setColumns(20);
         jTALDesc.setRows(5);
         jScrollPane7.setViewportView(jTALDesc);
 
-        jTALEspecies.setColumns(20);
+        jTALEspecies.setColumns(10);
         jTALEspecies.setRows(5);
         jScrollPane9.setViewportView(jTALEspecies);
+
+        jLabel26.setText("Espécies");
+
+        jBtnILocal.setText("Imagem");
+        jBtnILocal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnILocalActionPerformed(evt);
+            }
+        });
+
+        jBtnIMLocal.setText("Inserir Imagem");
+        jBtnIMLocal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnIMLocalActionPerformed(evt);
+            }
+        });
+
+        jBtnRMLocal.setText("Remover Imagem");
 
         javax.swing.GroupLayout jPLocalLayout = new javax.swing.GroupLayout(jPLocal);
         jPLocal.setLayout(jPLocalLayout);
@@ -385,65 +471,82 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
             jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPLocalLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
                 .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPLocalLayout.createSequentialGroup()
                         .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel11)
-                            .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPLocalLayout.createSequentialGroup()
-                        .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLocalLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jLabel10)
-                                .addGap(78, 78, 78))
+                            .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPLocalLayout.createSequentialGroup()
+                                    .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jTFLMax, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel10))
+                                    .addGap(96, 96, 96))
+                                .addComponent(jLabel8)
+                                .addComponent(jLabel9)
+                                .addComponent(jTFLCodPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTFLPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTFLNome))
                             .addGroup(jPLocalLayout.createSequentialGroup()
                                 .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel8)
-                                    .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jTFLMax, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                                        .addComponent(jTFLPreco, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jTFLCodPostal, javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jTFLNome, javax.swing.GroupLayout.Alignment.LEADING))
-                                    .addComponent(jLabel9))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(19, 19, 19))))
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel11))
+                                .addGap(159, 159, 159)))
+                        .addGap(14, 14, 14)
+                        .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel26)
+                            .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24))
+                    .addGroup(jPLocalLayout.createSequentialGroup()
+                        .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane7, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPLocalLayout.createSequentialGroup()
+                                .addComponent(jBtnILocal)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jBtnIMLocal)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jBtnRMLocal)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPLocalLayout.setVerticalGroup(
             jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPLocalLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(jPLocalLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPLocalLayout.createSequentialGroup()
+                .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPLocalLayout.createSequentialGroup()
-                        .addComponent(jTFLNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(17, 17, 17)
+                        .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel26))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel8)
+                        .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPLocalLayout.createSequentialGroup()
+                                .addComponent(jTFLNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTFLCodPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTFLPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel10)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTFLMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane9))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTFLCodPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTFLPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTFLMax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPLocalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jBtnILocal)
+                            .addComponent(jBtnIMLocal)
+                            .addComponent(jBtnRMLocal)))
+                    .addGroup(jPLocalLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jTPPainel.addTab("Locais", jPLocal);
@@ -469,7 +572,7 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
 
         jLabel12.setText("Numero");
 
-        jTFRData.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("M/d/yyyy"))));
+        jTFRNum.setEnabled(false);
 
         jLabel13.setText("Data");
 
@@ -477,51 +580,55 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
 
         jLabel15.setText("Local");
 
+        jTFRData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTFRDataActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPReservaLayout = new javax.swing.GroupLayout(jPReserva);
         jPReserva.setLayout(jPReservaLayout);
         jPReservaLayout.setHorizontalGroup(
             jPReservaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPReservaLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
                 .addGroup(jPReservaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPReservaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel12)
-                        .addComponent(jTFRData, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                        .addGroup(jPReservaLayout.createSequentialGroup()
-                            .addGap(6, 6, 6)
-                            .addComponent(jLabel13))
-                        .addComponent(jLabel14)
-                        .addComponent(jTFRCacador)
-                        .addComponent(jTFRNum))
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13)
+                    .addComponent(jTFRNum, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTFRData, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14)
+                    .addComponent(jTFRCacador, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15)
-                    .addComponent(jTFRLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(218, Short.MAX_VALUE))
+                    .addComponent(jTFRLocal, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         jPReservaLayout.setVerticalGroup(
             jPReservaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPReservaLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPReservaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
                     .addGroup(jPReservaLayout.createSequentialGroup()
                         .addComponent(jLabel12)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTFRNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(15, 15, 15)
+                        .addGap(9, 9, 9)
                         .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTFRData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTFRCacador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel15)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTFRLocal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTFRLocal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jTPPainel.addTab("Reservas", jPReserva);
@@ -568,70 +675,72 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
             .addGroup(jPCacadorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(61, 61, 61)
+                .addGap(34, 34, 34)
                 .addGroup(jPCacadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTFCNum, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16)
                     .addComponent(jLabel17)
+                    .addComponent(jTFCNome, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel18)
+                    .addComponent(jTFCBI, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel19)
                     .addGroup(jPCacadorLayout.createSequentialGroup()
+                        .addComponent(jLabel20)
+                        .addGap(161, 161, 161)
+                        .addComponent(jLabel21))
+                    .addGroup(jPCacadorLayout.createSequentialGroup()
                         .addGroup(jPCacadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel20)
+                            .addComponent(jTFCCodPostal)
+                            .addComponent(jTFCData, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                             .addComponent(jLabel22)
-                            .addComponent(jTFCMail, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-                            .addComponent(jTFCCodPostal))
-                        .addGap(18, 18, 18)
+                            .addComponent(jTFCMail))
+                        .addGap(68, 68, 68)
                         .addGroup(jPCacadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel23)
-                            .addComponent(jLabel21)
-                            .addComponent(jTFCTelef, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                            .addComponent(jTFCPass)))
-                    .addGroup(jPCacadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTFCData, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                        .addComponent(jTFCBI, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTFCNome, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTFCNum, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addContainerGap(173, Short.MAX_VALUE))
+                            .addComponent(jTFCTelef, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                            .addComponent(jTFCPass))))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         jPCacadorLayout.setVerticalGroup(
             jPCacadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPCacadorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPCacadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
                     .addGroup(jPCacadorLayout.createSequentialGroup()
                         .addComponent(jLabel16)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTFCNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(12, 12, 12)
                         .addComponent(jLabel17)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTFCNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel18)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTFCBI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel19)
-                        .addGap(5, 5, 5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTFCData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPCacadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel20)
                             .addComponent(jLabel21))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(4, 4, 4)
                         .addGroup(jPCacadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTFCCodPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTFCTelef, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPCacadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel22)
                             .addComponent(jLabel23))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPCacadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTFCMail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTFCPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                            .addComponent(jTFCPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         jTPPainel.addTab("Caçadores", jPCacador);
@@ -677,7 +786,7 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
                             .addGroup(jPCPEditLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jTFCPCodPostal, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)))
-                        .addGap(0, 237, Short.MAX_VALUE)))
+                        .addGap(0, 349, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPCPEditLayout.setVerticalGroup(
@@ -703,21 +812,20 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         jPCodPostalLayout.setHorizontalGroup(
             jPCodPostalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPCodPostalLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addContainerGap()
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addGap(36, 36, 36)
                 .addComponent(jPCPEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(147, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         jPCodPostalLayout.setVerticalGroup(
             jPCodPostalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPCodPostalLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPCPEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPCodPostalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPCPEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPCodPostalLayout.createSequentialGroup()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jTPPainel.addTab("Moradas", jPCodPostal);
@@ -761,6 +869,11 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
             }
         });
 
+        jLabel24.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Interface_layer/Icon.png"))); // NOI18N
+        jLabel24.setText("jLabel24");
+
+        jLabel25.setText("Administração");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -772,9 +885,11 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
                         .addComponent(jBtnNovo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jBtnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jBtnGravar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jBtnApagar, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
-                    .addComponent(jBtnCancelar))
-                .addContainerGap(12, Short.MAX_VALUE))
+                        .addComponent(jBtnApagar, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                        .addComponent(jBtnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel25))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -789,7 +904,11 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
                 .addComponent(jBtnCancelar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jBtnApagar)
-                .addContainerGap(301, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 183, Short.MAX_VALUE)
+                .addComponent(jLabel24)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel25)
+                .addGap(14, 14, 14))
         );
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.EAST);
@@ -875,25 +994,30 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
 
     private void jBtnApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnApagarActionPerformed
         try {
-            switch (jTPPainel.getSelectedIndex()) {
-                case 0:
-                    rmEspecie();
-                    break;
-                case 1:
-                    rmLocal();
-                    break;
-                case 2:
-                    rmReserva();
-                    break;
-                case 3:
-                    rmCacador();
-                    break;
-                case 4:
-                    rmCodPostal();
-                    break;
+            try {
+                switch (jTPPainel.getSelectedIndex()) {
+                    case 0:
+                        rmEspecie();
+                        break;
+                    case 1:
+                        rmLocal();
+                        break;
+                    case 2:
+                        rmReserva();
+                        break;
+                    case 3:
+                        rmCacador();
+                        break;
+                    case 4:
+                        rmCodPostal();
+                        break;
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            estadoVista();
         }
     }//GEN-LAST:event_jBtnApagarActionPerformed
 
@@ -901,45 +1025,55 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         editaTab = jTPPainel.getSelectedIndex();
         novoFlag = true;
         estadoEdicao();
-        switch (editaTab) {
-            case 0:
-                editaKey = jTableEspecie.getValueAt(jTableEspecie.getSelectedRow(), 0).toString();
-                break;
-            case 1:
-                editaKey = jTableLocal.getValueAt(jTableLocal.getSelectedRow(), 0).toString();
-                break;
-            case 2:
-                editaKey = jTableReserva.getValueAt(jTableReserva.getSelectedRow(), 0).toString();
-                break;
-            case 3:
-                editaKey = jTableLocal.getValueAt(jTableLocal.getSelectedRow(), 0).toString();
-                break;
-            case 4:
-                editaKey = jTableCodPostal.getValueAt(jTableCodPostal.getSelectedRow(), 0).toString();
-                break;
+        try {
+            switch (editaTab) {
+                case 0:
+                    // editaKey = jTableEspecie.getValueAt(jTableEspecie.getSelectedRow(), 0).toString();
+                    break;
+                case 1:
+                    // editaKey = jTableLocal.getValueAt(jTableLocal.getSelectedRow(), 0).toString();
+                    break;
+                case 2:
+                    jTFRNum.setText(Long.toString(reservaDAO.gerarKey()));
+                    // editaKey = jTableReserva.getValueAt(jTableReserva.getSelectedRow(), 0).toString();
+                    break;
+                case 3:
+                    //editaKey = jTableCacador.getValueAt(jTableCacador.getSelectedRow(), 0).toString();
+                    break;
+                case 4:
+                    //editaKey = jTableCodPostal.getValueAt(jTableCodPostal.getSelectedRow(), 0).toString();
+                    break;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jBtnNovoActionPerformed
 
     private void jBtnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnEditarActionPerformed
-        editaTab = jTPPainel.getSelectedIndex();
-        novoFlag = false;
-        estadoEdicao();
-        switch (editaTab) {
-            case 0:
-                editaKey = jTableEspecie.getValueAt(jTableEspecie.getSelectedRow(), 0).toString();
-                break;
-            case 1:
-                editaKey = jTableLocal.getValueAt(jTableLocal.getSelectedRow(), 0).toString();
-                break;
-            case 2:
-                editaKey = jTableReserva.getValueAt(jTableReserva.getSelectedRow(), 0).toString();
-                break;
-            case 3:
-                editaKey = jTableLocal.getValueAt(jTableLocal.getSelectedRow(), 0).toString();
-                break;
-            case 4:
-                editaKey = jTableCodPostal.getValueAt(jTableCodPostal.getSelectedRow(), 0).toString();
-                break;
+        try {
+            editaTab = jTPPainel.getSelectedIndex();
+            novoFlag = false;
+            estadoEdicao();
+            switch (editaTab) {
+                case 0:
+                    editaKey = jTableEspecie.getValueAt(jTableEspecie.getSelectedRow(), 0).toString();
+                    break;
+                case 1:
+                    editaKey = jTableLocal.getValueAt(jTableLocal.getSelectedRow(), 0).toString();
+                    break;
+                case 2:
+                    editaKey = jTableReserva.getValueAt(jTableReserva.getSelectedRow(), 0).toString();
+                    break;
+                case 3:
+                    editaKey = jTableCacador.getValueAt(jTableCacador.getSelectedRow(), 0).toString();
+                    break;
+                case 4:
+                    editaKey = jTableCodPostal.getValueAt(jTableCodPostal.getSelectedRow(), 0).toString();
+                    break;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            estadoVista();
         }
     }//GEN-LAST:event_jBtnEditarActionPerformed
 
@@ -949,29 +1083,37 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
             if (novoFlag == true) {
                 switch (editaTab) {
                     case 0:
+                        this.especieDAO.put(makeEspecie());
                         break;
                     case 1:
+                        this.localDAO.put(makeLocal());
                         break;
                     case 2:
+                        this.reservaDAO.put(makeReserva());
                         break;
                     case 3:
+                        this.cacadorDAO.put(makeCacador());
                         break;
                     case 4:
-                        this.codPostalDAO.put(new CodPostal(jTFCPCodPostal.getText(), jTFCPConcelho.getText(), jTFCPFreguesia.getText()));
+                        this.codPostalDAO.put(makeCodPostal());
                         break;
                 }
             } else {
                 switch (editaTab) {
                     case 0:
+                        this.especieDAO.update(makeEspecie(), editaKey);
                         break;
                     case 1:
+                        this.localDAO.update(makeLocal(), editaKey);
                         break;
                     case 2:
+                        this.reservaDAO.update(makeReserva(), Long.parseLong(editaKey));
                         break;
                     case 3:
+                        this.cacadorDAO.update(makeCacador(), Long.parseLong(editaKey));
                         break;
                     case 4:
-                        this.codPostalDAO.update(new CodPostal(jTFCPCodPostal.getText(), jTFCPConcelho.getText(), jTFCPFreguesia.getText()), editaKey);
+                        this.codPostalDAO.update(makeCodPostal(), editaKey);
                         break;
                 }
             }
@@ -986,6 +1128,34 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         novoFlag = false;
     }//GEN-LAST:event_jBtnCancelarActionPerformed
 
+    private void jTFRDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTFRDataActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTFRDataActionPerformed
+
+    private void jBtnIEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnIEspecieActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jBtnIEspecieActionPerformed
+
+    private void jBtnILocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnILocalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jBtnILocalActionPerformed
+
+    private void jBtnIMLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnIMLocalActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        int returnVal = chooser.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            String filename = chooser.getSelectedFile().getPath();
+        }
+    }//GEN-LAST:event_jBtnIMLocalActionPerformed
+
+    private void jBtnIMEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnIMEspecieActionPerformed
+        JFileChooser chooser = new JFileChooser();
+        int returnVal = chooser.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            String filename = chooser.getSelectedFile().getPath();
+        }
+    }//GEN-LAST:event_jBtnIMEspecieActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -997,7 +1167,7 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Mac OS X".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -1026,7 +1196,13 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
     private javax.swing.JButton jBtnCancelar;
     private javax.swing.JButton jBtnEditar;
     private javax.swing.JButton jBtnGravar;
+    private javax.swing.JButton jBtnIEspecie;
+    private javax.swing.JButton jBtnILocal;
+    private javax.swing.JButton jBtnIMEspecie;
+    private javax.swing.JButton jBtnIMLocal;
     private javax.swing.JButton jBtnNovo;
+    private javax.swing.JButton jBtnRMEspecie;
+    private javax.swing.JButton jBtnRMLocal;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1043,6 +1219,9 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1086,7 +1265,7 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
     private javax.swing.JTextField jTFLNome;
     private javax.swing.JTextField jTFLPreco;
     private javax.swing.JTextField jTFRCacador;
-    private javax.swing.JFormattedTextField jTFRData;
+    private javax.swing.JTextField jTFRData;
     private javax.swing.JTextField jTFRLocal;
     private javax.swing.JTextField jTFRNum;
     private javax.swing.JTabbedPane jTPPainel;

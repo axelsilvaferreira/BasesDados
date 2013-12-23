@@ -5,8 +5,6 @@
  */
 package Business_layer;
 
-import java.util.GregorianCalendar;
-
 /**
  *
  * @author andreramos
@@ -14,11 +12,11 @@ import java.util.GregorianCalendar;
 public class Reserva {
 
     private long numero;
-    private myDate data;
+    private MyDate data;
     private long numCacador;
     private String local;
 
-    public Reserva(long numero, myDate data, long numCacador, String local) {
+    public Reserva(long numero, MyDate data, long numCacador, String local) {
         this.numero = numero;
         this.data = data;
         this.numCacador = numCacador;
@@ -29,7 +27,7 @@ public class Reserva {
         return this.numero;
     }
 
-    public myDate getData() {
+    public MyDate getData() {
         return this.data;
     }
 

@@ -53,6 +53,27 @@ public class EspecieDAO extends Observable {
         }
         return lista;
     }
+    
+        public int put(Especie value) throws SQLException {
+        Statement stm = conn.createStatement();
+        String sql = "Insert into Especies values('" + value.getNome()
+                + "','" + value.getNumeroMax() + "','" + value.getDesc() + "','')";
+        int res = stm.executeUpdate(sql);
+        this.setChanged();
+        this.notifyObservers();
+        return res;
+    }
+
+    public int update(Especie value, String key) throws SQLException {
+        Statement stm = conn.createStatement();
+        String sql = "Update Especies set ne='" + value.getNome()
+                + "', nm='" + value.getNumeroMax() + "', de='" + value.getDesc()
+                + "' where ne ='" + key + "'";
+        int res = stm.executeUpdate(sql);
+        this.setChanged();
+        this.notifyObservers();
+        return res;
+    }
 
     public int remove(Object key) throws SQLException {
         Statement stm = conn.createStatement();
