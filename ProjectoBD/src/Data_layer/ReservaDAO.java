@@ -57,8 +57,8 @@ public class ReservaDAO extends Observable {
 
     public int update(Reserva value, Long key) throws SQLException {
         Statement stm = conn.createStatement();
-        String sql = "Update Reservas set nr=nr data=to_date('" + value.getData().toString() + "','yyyy-mm-dd'), nc='"
-                + value.getNumCacador() + "', nl=" + value.getLocal() + "' where nr ='" + key + "'";
+        String sql = "Update Reservas set data = to_date('" + value.getData().toString() + "','yyyy-mm-dd'), nc = "
+                + value.getNumCacador() + ", nl = '" + value.getLocal() + "' where nr ='" + key + "'";
         int res = stm.executeUpdate(sql);
         this.setChanged();
         this.notifyObservers();
