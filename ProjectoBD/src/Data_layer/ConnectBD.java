@@ -25,6 +25,7 @@ public class ConnectBD {
 
         } catch (ClassNotFoundException | SQLException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }
     }
 

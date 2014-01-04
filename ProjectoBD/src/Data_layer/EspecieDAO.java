@@ -7,6 +7,11 @@ package Data_layer;
 
 import Business_layer.Especie;
 import static Data_layer.ConnectBD.conn;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.Blob;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,8 +22,9 @@ import java.util.Observable;
  * @author andreramos
  */
 public class EspecieDAO extends Observable {
-    
-    public EspecieDAO(){}
+
+    public EspecieDAO() {
+    }
 
     public int size() throws SQLException {
 
@@ -53,8 +59,8 @@ public class EspecieDAO extends Observable {
         }
         return lista;
     }
-    
-        public int put(Especie value) throws SQLException {
+
+    public int put(Especie value) throws SQLException {
         Statement stm = conn.createStatement();
         String sql = "Insert into Especies values('" + value.getNome()
                 + "','" + value.getNumeroMax() + "','" + value.getDesc() + "','')";
@@ -62,6 +68,15 @@ public class EspecieDAO extends Observable {
         this.setChanged();
         this.notifyObservers();
         return res;
+    }
+
+    public void putFoto(String key, String caminho) throws SQLException, FileNotFoundException {
+        PreparedStatement pstmt = conn.prepareStatement("Update Especies set Foto=? where ne ='" + key + "'");
+        File fBlob = new File(caminho);
+        FileInputStream is = new FileInputStream(fBlob);
+        pstmt.setBinaryStream(1, is, (int) fBlob.length());
+        pstmt.execute();
+
     }
 
     public int update(Especie value, String key) throws SQLException {
@@ -81,6 +96,22 @@ public class EspecieDAO extends Observable {
         this.setChanged();
         this.notifyObservers();
         return res;
+    }
+
+    public int removeFoto(String key) throws SQLException {
+        Statement stm = conn.createStatement();
+        return stm.executeUpdate(("Update Especies set Foto='' where ne ='" + key + "'"));
+    }
+
+    public Blob getFoto(String key) throws SQLException {
+        ConnectBD.startBD();
+        Blob blob = null;
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM Especies where ne='" + key + "'");
+        if (rs.next()) {
+            blob = rs.getBlob(4);
+        }
+        return blob;
     }
 
 }

@@ -9,9 +9,14 @@ import java.util.Observable;
 import java.util.Observer;
 import Data_layer.*;
 import Business_layer.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -67,6 +72,39 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         this.listReserva();
         this.listCacador();
         this.listCodPostal();
+    }
+
+    public void limpar() {
+
+        jTFENome.setText("");
+        jTFEMax.setText("");
+        jTAEDesc.setText("");
+
+        jTFLNome.setText("");
+        jTFLCodPostal.setText("");
+        jTFLPreco.setText("");
+        jTFLMax.setText("");
+        jTALDesc.setText("");
+        jTALEspecies.setText("");
+
+        jTFRNum.setText("");
+        jTFRData.setText("");
+        jTFRCacador.setText("");
+        jTFRLocal.setText("");
+
+        jTFCNum.setText("");
+        jTFCNome.setText("");
+        jTFCBI.setText("");
+        jTFCData.setText("");
+        jTFCCodPostal.setText("");
+        jTFCTelef.setText("");
+        jTFCMail.setText("");
+        jTFCPass.setText("");
+
+        jTFCPCodPostal.setText("");
+        jTFCPConcelho.setText("");
+        jTFCPFreguesia.setText("");
+
     }
 
     public void listEspecie() {
@@ -202,6 +240,14 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         jBtnGravar.setEnabled(true);
         jBtnCancelar.setEnabled(true);
         jBtnApagar.setEnabled(false);
+
+        jBtnIEspecie.setEnabled(false);
+        jBtnIMEspecie.setEnabled(false);
+        jBtnRMEspecie.setEnabled(false);
+
+        jBtnILocal.setEnabled(false);
+        jBtnIMLocal.setEnabled(false);
+        jBtnRMLocal.setEnabled(false);
     }
 
     private void estadoVista() {
@@ -210,6 +256,14 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         jBtnGravar.setEnabled(false);
         jBtnCancelar.setEnabled(false);
         jBtnApagar.setEnabled(true);
+
+        jBtnIEspecie.setEnabled(true);
+        jBtnIMEspecie.setEnabled(true);
+        jBtnRMEspecie.setEnabled(true);
+
+        jBtnILocal.setEnabled(true);
+        jBtnIMLocal.setEnabled(true);
+        jBtnRMLocal.setEnabled(true);
     }
 
     /**
@@ -357,6 +411,11 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         });
 
         jBtnRMEspecie.setText("Remover Imagem");
+        jBtnRMEspecie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnRMEspecieActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPEspecieLayout = new javax.swing.GroupLayout(jPEspecie);
         jPEspecie.setLayout(jPEspecieLayout);
@@ -464,6 +523,11 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         });
 
         jBtnRMLocal.setText("Remover Imagem");
+        jBtnRMLocal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnRMLocalActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPLocalLayout = new javax.swing.GroupLayout(jPLocal);
         jPLocal.setLayout(jPLocalLayout);
@@ -1012,6 +1076,7 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
                         rmCodPostal();
                         break;
                 }
+                limpar();
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
             }
@@ -1024,6 +1089,7 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
     private void jBtnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnNovoActionPerformed
         editaTab = jTPPainel.getSelectedIndex();
         novoFlag = true;
+        limpar();
         estadoEdicao();
         try {
             switch (editaTab) {
@@ -1133,11 +1199,37 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_jTFRDataActionPerformed
 
     private void jBtnIEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnIEspecieActionPerformed
-        // TODO add your handling code here:
+        try {
+            try {
+                String chave = jTableEspecie.getValueAt(jTableEspecie.getSelectedRow(), 0).toString();
+                Blob blob = especieDAO.getFoto(chave);
+                if (blob != null) {
+                    Fotos.abrirFoto(chave, blob);
+                }
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Imagem inexistente", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jBtnIEspecieActionPerformed
 
     private void jBtnILocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnILocalActionPerformed
-        // TODO add your handling code here:
+        try {
+            try {
+                String chave = jTableLocal.getValueAt(jTableLocal.getSelectedRow(), 0).toString();
+                Blob blob = localDAO.getFoto(chave);
+                if (blob != null) {
+                    Fotos.abrirFoto(chave, blob);
+                }
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Imagem inexistente", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jBtnILocalActionPerformed
 
     private void jBtnIMLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnIMLocalActionPerformed
@@ -1145,6 +1237,11 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         int returnVal = chooser.showOpenDialog(null);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             String filename = chooser.getSelectedFile().getPath();
+            try {
+                localDAO.putFoto(jTableLocal.getValueAt(jTableLocal.getSelectedRow(), 0).toString(), filename);
+            } catch (SQLException | FileNotFoundException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_jBtnIMLocalActionPerformed
 
@@ -1153,8 +1250,39 @@ public class JProjectoBD extends javax.swing.JFrame implements Observer {
         int returnVal = chooser.showOpenDialog(null);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             String filename = chooser.getSelectedFile().getPath();
+            try {
+                especieDAO.putFoto(jTableEspecie.getValueAt(jTableEspecie.getSelectedRow(), 0).toString(), filename);
+            } catch (SQLException | FileNotFoundException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
         }
+
+
     }//GEN-LAST:event_jBtnIMEspecieActionPerformed
+
+    private void jBtnRMEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnRMEspecieActionPerformed
+        try {
+            try {
+                especieDAO.removeFoto(jTableEspecie.getValueAt(jTableEspecie.getSelectedRow(), 0).toString());
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jBtnRMEspecieActionPerformed
+
+    private void jBtnRMLocalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnRMLocalActionPerformed
+        try {
+            try {
+                localDAO.removeFoto(jTableLocal.getValueAt(jTableLocal.getSelectedRow(), 0).toString());
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jBtnRMLocalActionPerformed
 
     /**
      * @param args the command line arguments

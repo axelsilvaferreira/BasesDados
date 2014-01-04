@@ -7,6 +7,11 @@ package Data_layer;
 
 import Business_layer.Local;
 import static Data_layer.ConnectBD.conn;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.sql.Blob;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -82,8 +87,8 @@ public class LocalDAO extends Observable {
                 + "','" + value.getCodPostal() + "'," + value.getPreco()
                 + "," + value.getLimite() + ",'" + value.getDesc() + "','')";
         int res = stm.executeUpdate(sql);
-        putLEspecies(value.getNome(),value.getEspecies());
-        
+        putLEspecies(value.getNome(), value.getEspecies());
+
         this.setChanged();
         this.notifyObservers();
         return res;
@@ -98,7 +103,7 @@ public class LocalDAO extends Observable {
                 + "' where nl ='" + key + "'";
         int res = stm.executeUpdate(sql);
         removeLEspecies(value.getNome());
-        putLEspecies(value.getNome(),value.getEspecies());
+        putLEspecies(value.getNome(), value.getEspecies());
         this.setChanged();
         this.notifyObservers();
         return res;
@@ -122,12 +127,37 @@ public class LocalDAO extends Observable {
         return res;
     }
 
+    public void putFoto(String key, String caminho) throws SQLException, FileNotFoundException {
+        PreparedStatement pstmt = conn.prepareStatement("Update Locais set Foto=? where nl ='" + key + "'");
+        File fBlob = new File(caminho);
+        FileInputStream is = new FileInputStream(fBlob);
+        pstmt.setBinaryStream(1, is, (int) fBlob.length());
+        pstmt.execute();
+
+    }
+
     public int remove(Object key) throws SQLException {
         Statement stm = conn.createStatement();
         int res = stm.executeUpdate("Delete from Locais where nl='" + (String) key + "'");
         this.setChanged();
         this.notifyObservers();
         return res;
+    }
+
+    public int removeFoto(String key) throws SQLException {
+        Statement stm = conn.createStatement();
+        return stm.executeUpdate(("Update Locais set Foto='' where nl ='" + key + "'"));
+    }
+
+    public Blob getFoto(String key) throws SQLException {
+        ConnectBD.startBD();
+        Blob blob = null;
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM Locais where nl='" + key + "'");
+        if (rs.next()) {
+            blob = rs.getBlob(6);
+        }
+        return blob;
     }
 
 }
